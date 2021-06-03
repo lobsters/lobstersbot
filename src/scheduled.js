@@ -27,7 +27,16 @@ const readLobstersRss = (event) => {
         lastSeen = publishedAt;
         
         event.logger.info('Broadcasting story.', {itemDate: item.isoDate, itemGuid: item.guid, lastSeen});
-        event.reply(`${item.title} [${item.categories.join(' ')}] (${username}) ${item.guid}`);
+        
+        let replyWithURL = `${item.title} {${item.link}} [${item.categories.join(' ')}] (${username}) ${item.guid}`;
+        let replyWithoutURL = `${item.title} [${item.categories.join(' ')}] (${username}) ${item.guid}`;
+        
+        if(item.link === item.comments || replyWithURL.length > 510) {
+          event.reply(replyWithoutURL);          
+        }
+        else {
+          event.reply(replyWithURL);
+        }
       }
     });
     
